@@ -12,16 +12,24 @@
     </b-form-group>
 
     <b-button @click="gerarRelatorio">Gerar Relatório</b-button>
+    <b-button @click="gerarRelatorioFaltas">Gerar Relatório Faltas</b-button>
 
+    <!-- relatorio presença reuniões -->
     <div v-if="relatorio.length > 0">
       <b-table :items="relatorio" :fields="camposRelatorio"></b-table>
     </div>
+    <!-- relatorio de faltas (grafico) -->
+    <div v-if="chartData.labels.length">
+      <BarChart :chart-data="chartData" />
+    </div>
+
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
 import { supabase } from '../supabase';
+import BarChart from '@/components/BarChart.vue';
 
 const dataInicial = ref(null);
 const dataFinal = ref(null);
@@ -39,6 +47,35 @@ const opcoesTopicos = [
   { value: 'Reunião de fim de semana', text: 'Reunião de fim de semana' },
   { value: 'Reunião especial', text: 'Reunião especial' }
 ];
+
+const chartData = ref({
+  labels: [],
+  datasets: [{
+    label: 'Número de Faltas',
+    backgroundColor: '#42A5F5',
+    data: []
+  }]
+});
+
+const gerarRelatorioFaltas = async () => {
+  if (!dataInicial.value || !dataFinal.value) {
+    alert('Selecione o intervalo de datas.');
+    return;
+  }
+
+
+  const { data: resultados, error } = await supabase
+    .rpc('get_faltas_por_periodo', { data_inicial: dataInicial.value, data_final: dataFinal.value });
+
+  if (error) {
+    console.error('Erro ao gerar relatório de faltas:', error);
+    return;
+  }
+
+  // Preparar dados para o gráfico
+  chartData.value.labels = resultados.map(item => item.nome);
+  chartData.value.datasets[0].data = resultados.map(item => item.faltas);
+};
 
 const gerarRelatorio = async () => {
   if (!dataInicial.value || !dataFinal.value) {
@@ -98,3 +135,4 @@ const gerarRelatorio = async () => {
   }));
 };
 </script>
+
