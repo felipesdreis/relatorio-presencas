@@ -10,7 +10,7 @@
       <b-form-select v-model="topicoReuniao" :options="opcoesTopicos"></b-form-select>
     </b-form-group>
 
-    <b-button @click="criarECarregarPresencas">Criar Reunião e Carregar Presenças</b-button>
+    <b-button @click="criarECarregarPresencas">Criar Reunião</b-button>
 
     <!-- Tabela de Presenças -->
     <div v-if="pessoas.length > 0">

@@ -3,8 +3,8 @@
       <h3>Reuniões Existentes</h3>
       <b-table :items="reunioes" :fields="camposReunioes">
         <template #cell(acoes)="data">
-          <b-button size="sm" @click="carregarPresencas(data.item.id)">Ver Presenças</b-button>
-          <b-button size="sm" variant="danger" @click="excluirReuniao(data.item.id)">Excluir</b-button>
+          <b-button size="sm" @click="carregarPresencas(data.item.id)"><i class="bi bi-eye-fill"></i></b-button>
+          <b-button size="sm" variant="danger" @click="excluirReuniao(data.item.id)"><i class="bi bi-calendar-x"></i></b-button>
         </template>
       </b-table>
   

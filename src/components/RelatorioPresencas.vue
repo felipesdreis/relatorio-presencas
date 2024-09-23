@@ -88,6 +88,8 @@ const gerarRelatorio = async () => {
     return;
   }
 
+  console.log(resultados)
+
   // Preparar dados para a tabela
   relatorio.value = resultados.map(item => ({
     nome: item.pessoas.nome,
